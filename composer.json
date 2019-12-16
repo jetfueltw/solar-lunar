@@ -1,5 +1,5 @@
 {
-    "name": "jetfueltw/solar-lunar",
+    "name": "jetfueltw/solarlunar",
     "description": "Chinese solar lunar calendar converter",
     "type": "library",
     "require": {
