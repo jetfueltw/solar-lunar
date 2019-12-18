@@ -1,6 +1,6 @@
-# solarlunar
+# solarlunar-php
 
-公曆（阳历）、農曆（阴历）轉換，支援時間從 `1900`-`2100`。
+公曆（阳历）、農曆（阴历）轉換，支援時間從 `1900-01-01` 到 `2099-12-31`。
 
 基於 https://github.com/isee15/Lunar-Solar-Calendar-Converter  
 有更好的 PSR 與 Composer 支持。
@@ -8,7 +8,7 @@
 # Installation
 
 ```sh
-composer require jetfueltw/solarlunar
+composer require jetfueltw/solarlunar-php
 ```
 
 # Useage
