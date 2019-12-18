@@ -1,5 +1,5 @@
 {
-    "name": "jetfueltw/solarlunar",
+    "name": "jetfueltw/solarlunar-php",
     "description": "Chinese solar lunar calendar converter",
     "license": "Apache-2.0",
     "type": "library",

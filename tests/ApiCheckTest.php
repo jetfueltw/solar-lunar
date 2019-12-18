@@ -7,37 +7,24 @@ use Jetfuel\SolarLunar\Solar;
 use Jetfuel\SolarLunar\SolarLunar;
 use PHPUnit\Framework\TestCase;
 
-class HttpCheckTest extends TestCase
+class ApiCheckTest extends TestCase
 {
     public function testSolarToLunar()
     {
         $client = new Client();
-        $period = CarbonPeriod::create('1900-01-01', '2100-01-01');
+        $period = CarbonPeriod::create('1900-01-01', '2099-12-31');
 
         foreach ($period as $date) {
-            $year = $date->year;
-            $month = $date->month;
-            $day = $date->day;
-
-            $solar = Solar::create($year, $month, $day);
+            $solar = Solar::create($date->year, $date->month, $date->day);
             $lunar = SolarLunar::solarToLunar($solar);
-            $res = $this->getSolarToLunar($client, $solar);
+            $expectLunar = $this->getExpectLunar($client, $solar);
 
-            $isValid = $lunar->year === $res[0] &&
-                $lunar->month === $res[1] &&
-                $lunar->day === $res[2] &&
-                $lunar->isLeap === $res[3];
-
-            $this->assertTrue($isValid);
+            $this->assertEquals($expectLunar, $lunar);
 
             $solar = SolarLunar::lunarToSolar($lunar);
-            $res = $this->getLunarToSolar($client, $lunar);
+            $expectSolar = $this->getExpectSolar($client, $lunar);
 
-            $isValid = $solar->year === $res[0] &&
-                $solar->month === $res[1] &&
-                $solar->day === $res[2];
-
-            $this->assertTrue($isValid);
+            $this->assertEquals($expectSolar, $solar);
         }
     }
 
@@ -45,32 +32,32 @@ class HttpCheckTest extends TestCase
      * https://github.com/isee15/Lunar-Solar-Calendar-Converter
      * node check.js in javascript folder
      */
-    private function getSolarToLunar(Client $client, Solar $solar): array
+    private function getExpectLunar(Client $client, Solar $solar): Lunar
     {
         $resp = $client->request('GET', "http://localhost:1337/?src={$solar->year},{$solar->month},{$solar->day}");
         $result = explode(',', $resp->getBody()->getContents());
 
-        return [
+        return Lunar::create(
             (int) $result[0],
             (int) $result[1],
             (int) $result[2],
-            (bool) $result[3],
-        ];
+            (bool) $result[3]
+        );
     }
 
     /**
      * https://github.com/isee15/Lunar-Solar-Calendar-Converter
      * node check.js in javascript folder
      */
-    private function getLunarToSolar(Client $client, Lunar $lunar): array
+    private function getExpectSolar(Client $client, Lunar $lunar): Solar
     {
         $resp = $client->request('GET', "http://localhost:1337/?src={$lunar->year},{$lunar->month},{$lunar->day},{$lunar->isLeap}");
         $result = explode(',', $resp->getBody()->getContents());
 
-        return [
+        return Solar::create(
             (int) $result[0],
             (int) $result[1],
-            (int) $result[2],
-        ];
+            (int) $result[2]
+        );
     }
 }
