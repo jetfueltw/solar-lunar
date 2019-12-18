@@ -11,6 +11,10 @@
 composer require jetfueltw/solarlunar-php
 ```
 
+```php
+use Jetfuel\SolarLunar\SolarLunar;
+```
+
 # Useage
 
 公曆轉農曆
